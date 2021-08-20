@@ -7,6 +7,13 @@ set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
 project(playback)
 
+
+set(PCL_DIR "C:/vcpkg/packages/pcl_x86-windows/share/pcl/")
+set(EIGEN_INCLUDE_DIR "C:/vcpkg/packages/pcl_x86-windows/share/pcl/")
+set(Boost_INCLUDE_DIR "C:/vcpkg/packages/pcl_x86-windows/share/pcl/")
+
+
+
 find_package(PCL 1.2 REQUIRED)
 
 include_directories(${PCL_INCLUDE_DIRS})

@@ -121,7 +121,8 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
     return inliersResult;
 }
 
-std::unordered_set<int> Ransac3d(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceTol)
+
+std::unordered_set<int> Ransac3d(typename pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceTol)
 {
     std::unordered_set<int> inliersResult;
     std::unordered_set<int> inliers;
@@ -208,6 +209,7 @@ std::unordered_set<int> Ransac3d(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int 
     return inliersResult;
 
 }
+
 int main()
 {
 
