@@ -7,3 +7,5 @@ CMakeCache.txt
 *.vcxproj
 *.filters
 *.user
+src_original/*
+build/*
