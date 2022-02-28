@@ -86,7 +86,7 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
 {   
     // Single PCD
     // ProcessPointClouds<pcl::PointXYZI>* pointProcessor2 = new ProcessPointClouds<pcl::PointXYZI>();
-    // pcl::PointCloud<pcl::PointXYZI>::Ptr inputCloud = pointProcessor2->loadPcd("src/sensors/data/pcd/data_1/0000000000.pcd");
+    // pcl::PointCloud<pcl::PointXYZI>::Ptr inputCloud = pointProcessor2->loadPcd("sensors/data/pcd/data_1/0000000000.pcd");
     // pcl::PointCloud<pcl::PointXYZI>::Ptr filterCloud = pointProcessor2->FilterCloud(inputCloud, 0.1, Eigen::Vector4f(-20, -6, -3, 1), Eigen::Vector4f(25, 6.5, 3, 1));
     // renderPointCloud(viewer, inputCloud, "inputCloud");
     //Box box = pointProcessor2->BoundingBoxCustom(filterCloud);
@@ -174,7 +174,7 @@ int main (int argc, char** argv)
 
     // stream PCD
     ProcessPointClouds<pcl::PointXYZI> pointProcessor;
-    std::vector<boost::filesystem::path> stream = pointProcessor.streamPcd("src/sensors/data/pcd/data_2");
+    std::vector<boost::filesystem::path> stream = pointProcessor.streamPcd("../src/sensors/data/pcd/data_2");
     auto streamIterator = stream.begin();
     pcl::PointCloud<pcl::PointXYZI>::Ptr inputCloud;
     int cnt = 0;
