@@ -82,9 +82,11 @@ struct KdTree
 	{
 		if (root != NULL)
 		{	
-			if (distCompare(target, root->point, distTol))
-			{
-				ids.push_back(root->id);
+			if((node->point[0] >= (target[0] - distanceTol) && node->point[0] <= (target[0] + distanceTol)) && (node->point[1] >= (target[1] - distanceTol) && node->point[1] <= (target[1] + distanceTol))) {
+				if (distCompare(target, root->point, distTol))
+				{
+					ids.push_back(root->id);
+				}
 			}
 
 			idx = depth % 2;

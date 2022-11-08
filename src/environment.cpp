@@ -108,18 +108,22 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
 
 
 void cityBlockSinglePCD(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointClouds<pcl::PointXYZI> pointProcessor, pcl::PointCloud<pcl::PointXYZI>::Ptr inputCloud) {
-    
+    // High res PCD
+    // renderPointCloud(viewer, inputCloud, "inputCloud");
+
     // 1. Filtering and region cropping
     float FilterResolution = 0.3;
     Eigen::Vector4f MinPoint(-10, -6.0, -2, 1);
     Eigen::Vector4f MaxPoint(30, 6.5, 1, 1);
     inputCloud = pointProcessor.FilterCloud(inputCloud, FilterResolution, MinPoint, MaxPoint);
-    renderPointCloud(viewer, inputCloud, "inputCloud", Color(0.5, 0.5, 0.5));
+    // renderPointCloud(viewer, inputCloud, "inputCloud");
 
     // 2. Segmentation 
     int maxIter = 50;
     float distThresh = 0.2; //0.3 for data_2
     std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor.SegmentPlane(inputCloud, maxIter, distThresh);
+    // renderPointCloud(viewer, segmentCloud.first, "obstCloud", Color(1, 0, 0));
+    renderPointCloud(viewer, segmentCloud.second, "planeCloud", Color(0.5, 0.5, 0.5));
 
     // Segmentation using Ransac3d - too slow
     // std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor.RansacPlaneSegment(inputCloud, maxIter, distThresh);
