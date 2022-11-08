@@ -36,14 +36,18 @@ https://user-images.githubusercontent.com/49369282/200521059-b8ac1380-92bb-407b-
 ## The Lidar Model and Simulated Point Clouds <a name="lidar"></a>
 To simulate the point cloud generation process, a simple lidar model is used. This model takes in parameters such as max and min ray distance, angular resolution, a surrounding cars vector, etc. A set of rays are generated using these parameters. The lidar scan function implements raycasting each of these rays are checked for collision with other cars or the ground plane. The scan function returns a point cloud with some Gaussian noise added in. A simple highway scene that explains this is shown below
 
-***INSERT SIMPLE HIGHWAY LIDAR SCAN IMAGE***
+<p align="center">
+<img src="https://github.com/knaaga/lidar-obstacle-detection/blob/main/assets/simple_highway_lidar.JPG" width="591" height="335"/>
+</p>
 
 ## Real World Point Cloud Data <a name="realworldPCD"></a>
 The different point cloud processing techniques described in the subsequent section can be applied to the simulated set of point clouds that are obtained using the previously described lidar model. This can serve as a simplified learning experience and can be used to debug and the different algorithims involved. However going forward, these techniques will be applied on real world PCD data obtained from an actual lidar. 
 
 Also, the same techniques used to process a single point cloud dataset is then extended to process a stream of incoming point clouds
 
-***INSERT HIGH RES LIDAR SCAN***
+<p align="center">
+<img src="https://github.com/knaaga/lidar-obstacle-detection/blob/main/assets/high_res_point_cloud.JPG" width="591" height="335"/>
+</p>
 
 The image above shows a high resolution point cloud that spans a large distance. In order for the processing pipeline to be able to digest the data as quickly as possible, the point cloud will have to be filtered down. There are two key techniques involved here:
 
@@ -55,7 +59,9 @@ The lidar scan extends over a large distance from the ego vehicle. This can be c
 
 The filtered and cropped point cloud data is shown below
 
-***INSERT FILTERED AND CROPPED LIDAR SCAN***
+<p align="center">
+<img src="https://github.com/knaaga/lidar-obstacle-detection/blob/main/assets/filtered_point_cloud.JPG" width="591" height="335"/>
+</p>
 
 ## Planar Segmentation <a name="segmentation"></a>
 One of the key objectives of lidar point cloud processing is to separate the road plane from potential obstacles. To achieve this, planar segmentation based on the random sampling consensus (RANSAC) algorithm is used. 
@@ -67,11 +73,15 @@ There are different variations to the RANSAC algorithm. One type selects the sma
 
 Other methods of RANSAC could sample some percentage of the model points, for example 20% of the total points, and then fit a line to that. Then the error of that line is calculated, and the iteration with the lowest error is the best model. This method might have some advantages since not every point at each iteration needs to be considered. It’s good to experiment with different approaches and time results to see what works best. The following graphic shows a 2D RANSAC algorithm
 
-***INSERT 2D RANSAC GIF***
+<p align="center">
+<img src="https://github.com/knaaga/lidar-obstacle-detection/blob/main/assets/ransac.gif" width="400" height="380"/>
+</p>
 
 The output of the planar segmentation process is a pair of point clouds - one that represents the road and the other than represents obstacles. The segmented PCD data is shown below
 
-***INSERT SEGMENTED PCD***
+<p align="center">
+<img src="https://github.com/knaaga/lidar-obstacle-detection/blob/main/assets/segmented_point_cloud.JPG" width="591" height="335"/>
+</p>
 
 ## Euclidean Clustering <a name="clustering"></a>
 Once the obstacles and road points have been segmented, the next step is to cluster the points that represent the different obstacles. One way to do this is the Euclidean clustering algorithm. The idea here is to create association between groups of points depending on how close they are. This involves performing a nearest neighbor search and to do this efficiently, a data structure such as a KD-Tree is required. 
@@ -79,7 +89,9 @@ Once the obstacles and road points have been segmented, the next step is to clus
 ### KD-Tree
 A KD-Tree is a K-dimensional binary search tree that organizes data spatially by splitting points between alternating dimensions. By doing this, KD-Tree enables efficient nearest neighbor search with a time complexity of O(log(n)) as opposed to O(n). This is primarily because, by grouping the points into regions in a KD-Tree, the search space is narrowed down drastically and expensive distance computations for potentially thousands of points can be avoided. The algorithm used to construct a KD-Tree is explained [here](https://www.geeksforgeeks.org/k-dimensional-tree/). The 2D points before and after spacial splitting are shown below. Here, the blue lines indicate X dimension splits and red lines indicate Y region splits
 
-***INSERT BEFORE AND AFTER KD TREE SEPARATION***
+<p align="center">
+<img src="https://github.com/knaaga/lidar-obstacle-detection/blob/main/assets/kd_tree_separation.JPG" width="800" height="400"/>
+</p>
 
 Once points are able to be inserted into the tree, the next step is being able to search for nearby points inside the tree compared to a given target point. Points within a distance tolerance are considered to be nearby. 
 
@@ -87,7 +99,9 @@ The naive approach of finding nearby neighbors is to go through every single poi
 
 Instead with the KD-Tree, a boxed square of size 2 X distance tolerance, centered around the target point is used. If the current node point is within this box, only then the Euclidean distance is calculated and depending on this, it can be determined if the point should be added to the list of nearby points. Further, if this box does not cross over the node division region, the branch on the other side of the region is completely skipped. If it crosses over, then that side is recursively explored. This is shown in the image below. The red crosses indicate regions which were entirely skipped.
 
-***INSERT KD TREE SEARCH***
+<p align="center">
+<img src="https://github.com/knaaga/lidar-obstacle-detection/blob/main/assets/kd_tree_search.JPG" width="400" height="375"/>
+</p>
 
 Once the KD-Tree method for searching nearby points is implemented, the next step is to implement a euclidean clustering method that groups individual cluster indices based on their proximity. To perform the clustering, the following approach can be used:
 * Iterate through each point in the cloud and keep track of which points have been processed already. 
@@ -98,25 +112,30 @@ Once the KD-Tree method for searching nearby points is implemented, the next ste
 
 The clustered 2D space is shown below
 
-***INSERT KD TREE CLUSTERED***
+<p align="center">
+<img src="https://github.com/knaaga/lidar-obstacle-detection/blob/main/assets/kd_tree_clustering.JPG" width="400" height="400"/>
+</p>
 
 The clustered real world PCD data is shown below
 
-***INSERT REAL WORLD PCD CLUSTERED***
+<p align="center">
+<img src="https://github.com/knaaga/lidar-obstacle-detection/blob/main/assets/clustered_point_cloud.JPG" width="591" height="335"/>
+</p>
 
 ## Bounding Boxes <a name="boxes"></a>
 As a final touch, bounding boxes can be added around the clusters. The bounding box volume could also be thought of as space the car is not allowed to enter, or it would result in a collision.
 
-***INSERT BOUNDING BOX IMAGE***
+<p align="center">
+<img src="https://github.com/knaaga/lidar-obstacle-detection/blob/main/assets/bounding_box.JPG" width="591" height="335"/>
+</p>
 
 In this method of generating bounding boxes, the boxes are always oriented along the X and Y axis. This is acceptable if the cluster has the majority of its points oriented along these axes. However, if the cluster has a very long rectangular object at a 45 deg angle to the X axis, then the resulting bounding box would be unnecessarily large and would constrain the ego vehicle's available space to move around
 
-***INSERT EFFICIENT BOX IMAGE***
+<p align="center">
+<img src="https://github.com/knaaga/lidar-obstacle-detection/blob/main/assets/pca_box.JPG" width="450" height="255"/>
+</p>
 
 In the image above, the bounding box on the right and is more efficient, taking into account the rotation about the Z axis and containing all the points with the minimum area required. This project does not include code for generating such a box, but techniques like [principal components analysis](https://en.wikipedia.org/wiki/Principal_component_analysis) can be used to identify the primary axis of the points and a quaternion member can be used for the rotation
-
-
-
 
 ## Ackowledgements <a name="acknowledgements"></a>
 * [Udacity Sensor Fusion Program](https://www.udacity.com/course/sensor-fusion-engineer-nanodegree--nd313)
