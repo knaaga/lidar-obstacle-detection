@@ -7,6 +7,8 @@ set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
 project(playback)
 
+# project(voxel_grid)
+
 find_package(PCL 1.10 REQUIRED)
 
 include_directories(${PCL_INCLUDE_DIRS})
@@ -17,6 +19,9 @@ list(REMOVE_ITEM PCL_LIBRARIES "vtkproj4")
 
 add_executable (environment src/environment.cpp src/render/render.cpp src/processPointClouds.cpp)
 target_link_libraries (environment ${PCL_LIBRARIES})
+
+# add_executable (voxel_grid src/pointclouds/voxel_grid.cpp)
+# target_link_libraries (voxel_grid ${PCL_LIBRARIES})
 
 
 

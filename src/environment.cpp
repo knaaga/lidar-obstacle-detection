@@ -119,10 +119,10 @@ void cityBlockSinglePCD(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessP
     // 2. Segmentation 
     int maxIter = 50;
     float distThresh = 0.2; //0.3 for data_2
-    //std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor.SegmentPlane(inputCloud, maxIter, distThresh);
+    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor.SegmentPlane(inputCloud, maxIter, distThresh);
 
     // Segmentation using Ransac3d - too slow
-    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor.RansacPlaneSegment(inputCloud, maxIter, distThresh);
+    // std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor.RansacPlaneSegment(inputCloud, maxIter, distThresh);
 
     // ego car box
     // xmin, ymin, zmin, xmax, ymax, zmax
