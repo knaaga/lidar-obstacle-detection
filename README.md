@@ -34,7 +34,7 @@ https://user-images.githubusercontent.com/49369282/200521059-b8ac1380-92bb-407b-
 - [Acknowledgements](#acknowledgements)
 
 ## The Lidar Model and Simulated Point Clouds <a name="lidar"></a>
-To simulate the point cloud generation process, a simple lidar model is used. This model takes in parameters such as max and min ray distance, angular resolution, a surrounding cars vector, etc. A set of rays are generated using these parameters. The lidar scan function implements raycasting each of these rays are checked for collision with other cars or the ground plane. The scan function returns a point cloud with some Gaussian noise added in. A simple highway scene that explains this is shown below
+To simulate the point cloud generation process, a simple lidar model is used. This model takes in parameters such as max and min ray distance, angular resolution, a surrounding cars vector, etc. A set of rays are generated using these parameters. The lidar scan function implements raycasting where each of these rays are checked for collision with other cars or the ground plane. The scan function returns a point cloud with some Gaussian noise added in. A simple highway scene that explains this is shown below
 
 <p align="center">
 <img src="https://github.com/knaaga/lidar-obstacle-detection/blob/main/assets/simple_highway_lidar.JPG" width="591" height="335"/>
